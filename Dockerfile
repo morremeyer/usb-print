@@ -5,11 +5,11 @@ RUN apt-get update && apt-get install -y \
   libcups2-dev
 
 COPY entrypoint.sh /
-COPY requirements.txt /app/
-COPY src /app/
 
 WORKDIR /app
 
+COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 
+COPY src /app/
 CMD [ "/entrypoint.sh" ]
