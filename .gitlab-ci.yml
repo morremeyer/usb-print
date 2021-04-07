@@ -1,0 +1,12 @@
+stages:
+  - build
+
+include:
+  - project: morre/ci-templates
+    file: kaniko.yml
+
+kaniko:
+  stage: build
+  extends: .kaniko-gitlab
+  script:
+    - /kaniko/executor --context . --destination $CI_REGISTRY_IMAGE:latest
