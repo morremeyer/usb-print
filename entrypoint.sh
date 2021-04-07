@@ -13,3 +13,5 @@ start() {
 stop() {
   exit
 }
+
+start
