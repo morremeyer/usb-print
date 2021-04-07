@@ -1,7 +1,15 @@
 #!/bin/bash
 
-# Start the printing loop
-python3 /app/print.py &
+trap stop SIGTERM SIGINT SIGQUIT SIGHUP ERR
 
-# Start cupsd
-/usr/sbin/cupsd -f
+start() {
+  # Start the printing loop
+  python3 /app/print.py &
+
+  # Start cupsd
+  /usr/sbin/cupsd -f
+}
+
+stop() {
+  exit
+}
