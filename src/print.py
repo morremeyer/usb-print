@@ -1,4 +1,5 @@
 import logging
+import sys
 from os import getenv, remove
 from time import sleep
 
@@ -38,7 +39,12 @@ if __name__ == "__main__":
     conn = cups.Connection()
 
     # We assume to only have one printer, so get its name (which is the key in the dict)
-    printer = list(conn.getPrinters().keys())[0]
+    printers = conn.getPrinters()
+    if len(printers) == 0:
+        logging.error("No printers found, exiting")
+        sys.exit(1)
+
+    printer = list(printers.keys())[0]
     logging.info(f"Using printer {printer}")
 
     while True:  # Yeah, I know, busy wating loops yaddah yaddah
