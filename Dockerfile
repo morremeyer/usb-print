@@ -4,6 +4,7 @@ RUN apt-get update && apt-get install -y \
   python3-pip \
   libcups2-dev
 
+COPY requirements.txt /app
 COPY src/ /app
 WORKDIR /app
 
