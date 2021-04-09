@@ -7,7 +7,7 @@ import cups
 
 from webdav import Client
 
-logging.basicConfig(format="%(asctime)s %(message)s", level=logging.DEBUG)
+logging.basicConfig(format="%(asctime)s %(message)s", level=logging.INFO)
 
 if __name__ == "__main__":
     """Print documents from a WebDav server
