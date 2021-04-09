@@ -57,8 +57,9 @@ class Client:
         verb = "GET"
         requestpath = self.get_request_path(path)
         response = self.send_request(verb, requestpath)
+
         if response.status_code == WEBDAV_STATUS_CODE["OK"]:
-            return response.text
+            return response.content
         return False
 
     def move(self, path, destination, overwrite):

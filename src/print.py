@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
                 logging.debug(f"Writing {path} to {target_path}")
 
-                with open(target_path, "w") as f:
+                with open(target_path, "wb") as f:
                     f.write(download)
 
                 # Print the file
