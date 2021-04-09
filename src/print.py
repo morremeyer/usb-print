@@ -64,14 +64,14 @@ if __name__ == "__main__":
 
         # Loop over file names, download, print, delete, move remotely
         for path in paths:
-            logging.debug(f"Processing {path}")
+            logging.debug(f"Downloading {path}")
             download = client.get(path)
 
             if download:
                 file_name = str(path).split("/")[-1]
                 target_path = f"/tmp/{file_name}"
 
-                logging.debug(f"Downloading {path} to {target_path}")
+                logging.debug(f"Writing {path} to {target_path}")
 
                 with open(target_path, "w") as f:
                     f.write(download)
