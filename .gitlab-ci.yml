@@ -2,7 +2,7 @@ stages:
   - build
 
 include:
-  - project: morre/ci-templates
+  - project: open/ci-templates
     file: kaniko.yml
 
 kaniko:
