@@ -5,6 +5,8 @@ stages:
 include:
   - project: open/ci-templates
     file: kaniko.yml
+  - project: open/ci-templates
+    file: renovate.yml
 
 kaniko:
   stage: build
