@@ -4,6 +4,7 @@ from os import getenv, remove
 from time import sleep
 
 import cups
+from urllib3.exceptions import NewConnectionError
 
 from webdav import Client
 
@@ -49,7 +50,14 @@ if __name__ == "__main__":
 
     while True:  # Yeah, I know, busy wating loops yaddah yaddah
         # We just authenticate every time to avoid authentication issues
-        client.authenticate()
+        try:
+            client.authenticate()
+        except NewConnectionError as error:
+            logging.error(
+                f"Authentication failed with: '{error.message}', retrying in 30 seconds"
+            )
+            sleep(30)
+            continue
 
         # Get list of all files
         profind = client.propfind(DIRECTORY)
