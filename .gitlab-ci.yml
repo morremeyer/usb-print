@@ -13,6 +13,9 @@ kaniko:
   extends: .kaniko-gitlab
   script:
     - /kaniko/executor --context . --destination $CI_REGISTRY_IMAGE:latest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
 
 renovate:
   stage: renovate
