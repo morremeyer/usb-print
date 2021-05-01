@@ -4,7 +4,7 @@ from os import getenv, remove
 from time import sleep
 
 import cups
-from urllib3.exceptions import NewConnectionError
+from urllib3.exceptions import ConnectionError, NewConnectionError
 
 from webdav import Client
 
@@ -52,53 +52,54 @@ if __name__ == "__main__":
         # We just authenticate every time to avoid authentication issues
         try:
             client.authenticate()
-        except NewConnectionError as error:
+
+            # Get list of all files
+            profind = client.propfind(DIRECTORY)
+            paths = [
+                f["href"]
+                for f in profind.getchildren()
+                if not str(f["href"]).endswith(DIRECTORY)
+            ]
+
+            if len(paths) == 0:
+                logging.debug("No files to print, going back to sleep")
+
+            # Loop over file names, download, print, delete, move remotely
+            for path in paths:
+                logging.debug(f"Downloading {path}")
+                download = client.get(path)
+
+                if download:
+                    file_name = str(path).split("/")[-1]
+                    target_path = f"/tmp/{file_name}"
+
+                    logging.debug(f"Writing {path} to {target_path}")
+
+                    with open(target_path, "wb") as f:
+                        f.write(download)
+
+                    # Print the file
+                    logging.info(f"Printing {file_name}")
+                    conn.printFile(printer, target_path, file_name, {})
+
+                    # Cleanup
+                    logging.debug(f"Removing {target_path}")
+                    remove(target_path)
+
+                    logging.debug(
+                        f"Moving {path} to archive at {ARCHIVE_DIRECTORY}{file_name}"
+                    )
+                    client.move(path, f"{ARCHIVE_DIRECTORY}{file_name}", True)
+
+                else:
+                    logging.error(f"Couldn’t download {path}")
+
+        except (NewConnectionError, ConnectionError, AttributeError) as error:
             logging.error(
-                f"Authentication failed with: '{error.message}', retrying in 30 seconds"
+                f"Loop failed with: '{error.message}', retrying in 30 seconds"
             )
             sleep(30)
             continue
-
-        # Get list of all files
-        profind = client.propfind(DIRECTORY)
-        paths = [
-            f["href"]
-            for f in profind.getchildren()
-            if not str(f["href"]).endswith(DIRECTORY)
-        ]
-
-        if len(paths) == 0:
-            logging.debug("No files to print, going back to sleep")
-
-        # Loop over file names, download, print, delete, move remotely
-        for path in paths:
-            logging.debug(f"Downloading {path}")
-            download = client.get(path)
-
-            if download:
-                file_name = str(path).split("/")[-1]
-                target_path = f"/tmp/{file_name}"
-
-                logging.debug(f"Writing {path} to {target_path}")
-
-                with open(target_path, "wb") as f:
-                    f.write(download)
-
-                # Print the file
-                logging.info(f"Printing {file_name}")
-                conn.printFile(printer, target_path, file_name, {})
-
-                # Cleanup
-                logging.debug(f"Removing {target_path}")
-                remove(target_path)
-
-                logging.debug(
-                    f"Moving {path} to archive at {ARCHIVE_DIRECTORY}{file_name}"
-                )
-                client.move(path, f"{ARCHIVE_DIRECTORY}{file_name}", True)
-
-            else:
-                logging.error(f"Couldn’t download {path}")
 
         # And now we wait for a moment
         sleep(15)
