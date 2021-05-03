@@ -5,7 +5,8 @@ It checks the WebDav server every 15 seconds and sends all found files to cups. 
 
 If you deploy it with the Docker image, it comes with [olbat/cupsd](https://github.com/olbat/dockerfiles/tree/master/cupsd) as a print server, too.
 
-Just plug your printer and follow the usage instructions below!h
+Just plug your printer and follow the usage instructions below!
+
 ## Usage
 
 You need to set the following environment variables:
