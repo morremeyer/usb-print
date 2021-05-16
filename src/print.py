@@ -44,7 +44,7 @@ if __name__ == "__main__":
     printers = conn.getPrinters()
     if len(printers) == 0:
         logging.error("No printers found, exiting")
-        sys.exit(1)
+        sys.exit(0)
 
     printer = list(printers.keys())[0]
     logging.info(f"Using printer {printer}")
