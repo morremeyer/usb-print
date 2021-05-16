@@ -61,7 +61,7 @@ if __name__ == "__main__":
         ]
 
         if len(paths) == 0:
-            logging.debug("No files to print, going back to sleep")
+            logging.debug("No files to print")
 
         # Loop over file names, download, print, delete, move remotely
         for path in paths:
