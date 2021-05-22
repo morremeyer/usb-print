@@ -54,6 +54,11 @@ if __name__ == "__main__":
 
         # Get list of all files
         profind = client.propfind(DIRECTORY)
+
+        if not profind:
+            logging.info("No files in print directory, exiting")
+            sys.exit(0)
+
         paths = [
             f["href"]
             for f in profind.getchildren()
