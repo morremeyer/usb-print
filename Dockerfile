@@ -1,4 +1,4 @@
-FROM python:3.10.2-buster
+FROM python:3.11.4-buster
 
 RUN apt-get update && apt-get install -y \
   libcups2-dev
